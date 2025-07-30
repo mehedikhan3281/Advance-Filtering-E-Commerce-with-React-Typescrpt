@@ -60,6 +60,38 @@ const Sidebar = () => {
                     />
                 </div>
 
+                <div className="mb-5">
+                    <h2 className="text-xl font-semibold mb-3">Categories</h2>
+                </div>
+
+                <section>
+                    {
+                        categories.map((category, index) => (
+                            <label key={index} className="block mb-2">
+                                <input type="radio" value={category} name="category" className="mr-2 w-4 h-4" />
+                                {category.toUpperCase()}
+                            </label>
+                        ))
+                    }
+                </section>
+
+                {/* keyword section */}
+                <div className="mb-5 mt-4">
+                    <h2 className="text-xl font-semibold mb-3">Keywords</h2>
+                    <div>
+                        {
+                            keywords.map((keyword, index) => (
+                                <button key={index} className="block mb-2 px-4 w-full text-left border rounded hover:bg-gray-200">
+                                    {keyword.toUpperCase()}
+                                </button>
+                            ))
+                        }
+                    </div>
+                </div>
+
+                <button className="w-ful mb-1 px-3 bg-black text-white rounded mt-5 py-2">
+                    Reset Filters
+                </button>
             </section>
         </div>
     )
