@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { useFilter } from "./FilterContext"
 
 interface Product {
     category: string
@@ -9,6 +10,19 @@ interface FetchResponse {
 }
 
 const Sidebar = () => {
+    const {
+        searchQuery,
+        setSearchQuery,
+        selectedCategory,
+        setSelectedCategory,
+        minPrice,
+        setMinPrice,
+        maxPrice,
+        setMaxPrice,
+        keyword,
+        setKeyword
+    } = useFilter()
+
     const [categories, setCategories] = useState<string[]>([]);
     const [keywords] = useState<string[]>([
         "apple",
@@ -18,6 +32,32 @@ const Sidebar = () => {
         "shoes",
         "shirt",
     ])
+
+    const handleMinPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setMinPrice(value ? parseFloat(value) : undefined);
+    }
+
+    const handleMaxPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setMaxPrice(value ? parseFloat(value) : undefined);
+    }
+
+    const handleRadioChangeCategories = (category: string) => {
+        setSelectedCategory(category)
+    }
+
+    const handleKeywordClcik = (keyword: string) => {
+        setKeyword(keyword)
+    }
+
+    const handleResetFilters = () => {
+        setSearchQuery('')
+        setSelectedCategory('')
+        setMinPrice(undefined)
+        setMaxPrice(undefined)
+        setKeyword('')
+    }
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -45,6 +85,8 @@ const Sidebar = () => {
                     type="text"
                     className="border-2 rounded px-2 sm:mb-2"
                     placeholder="Search Product"
+                    value={searchQuery}
+                    onChange={e => setSearchQuery(e.target.value)}
                 />
 
                 <div className="flex justify items-center">
@@ -52,11 +94,15 @@ const Sidebar = () => {
                         type="text"
                         className="border-2 px-5 mr-2 py-3 mb-3 w-full"
                         placeholder="Min"
+                        value={minPrice ?? ""}
+                        onChange={handleMinPriceChange}
                     />
                     <input
                         type="text"
                         className="border-2 px-5 mr-2 py-3 mb-3 w-full"
                         placeholder="Max"
+                        value={maxPrice ?? ""}
+                        onChange={handleMaxPriceChange}
                     />
                 </div>
 
@@ -68,7 +114,13 @@ const Sidebar = () => {
                     {
                         categories.map((category, index) => (
                             <label key={index} className="block mb-2">
-                                <input type="radio" value={category} name="category" className="mr-2 w-4 h-4" />
+                                <input
+                                    type="radio"
+                                    value={category}
+                                    onChange={() => handleRadioChangeCategories(category)}
+                                    checked={selectedCategory === category}
+                                    name="category"
+                                    className="mr-2 w-4 h-4" />
                                 {category.toUpperCase()}
                             </label>
                         ))
@@ -81,7 +133,11 @@ const Sidebar = () => {
                     <div>
                         {
                             keywords.map((keyword, index) => (
-                                <button key={index} className="block mb-2 px-4 w-full text-left border rounded hover:bg-gray-200">
+                                <button 
+                                key={index} 
+                                className="block mb-2 px-4 w-full text-left border rounded hover:bg-gray-200"
+                                onClick={() => handleKeywordClcik(keyword)}
+                                >
                                     {keyword.toUpperCase()}
                                 </button>
                             ))
@@ -89,7 +145,7 @@ const Sidebar = () => {
                     </div>
                 </div>
 
-                <button className="w-ful mb-1 px-3 bg-black text-white rounded mt-5 py-2">
+                <button onClick={handleResetFilters} className="w-ful mb-1 px-3 bg-black text-white rounded mt-5 py-2">
                     Reset Filters
                 </button>
             </section>
