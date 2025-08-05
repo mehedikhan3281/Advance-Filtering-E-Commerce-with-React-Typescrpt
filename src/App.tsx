@@ -11,7 +11,7 @@ function App() {
     <div className="flex h-screen">
       <Sidebar></Sidebar>
 
-      <div className="rounded w-full justify-between flex-wrap">
+      <div className="rounded w-full justify-center flex-wrap">
         <Routes>
           <Route path="/" element={<MainContent />} />
           <Route path="/product/:id" element={<ProductPage />} />
